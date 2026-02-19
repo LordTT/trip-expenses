@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useTripStore from '../store/tripStore';
 import { tripAPI } from '../services/api';
 
@@ -6,6 +6,11 @@ const TripList = () => {
   const { trips, getTrips, deleteTrip, isLoading, error, clearError } = useTripStore();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newTrip, setNewTrip] = useState({ name: '', description: '' });
+
+  useEffect(() => {
+    // Load trips when component mounts
+    getTrips();
+  }, [getTrips]);
 
   const handleCreateTrip = async (e) => {
     e.preventDefault();

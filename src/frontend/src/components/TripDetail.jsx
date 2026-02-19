@@ -25,6 +25,26 @@ const TripDetail = () => {
     }
   }, [tripId, getTripById, getExpensesByTrip]);
 
+  // Handle case where trip is still loading
+  if (tripLoading && !currentTrip) {
+    return <div className="text-center py-8">Loading trip...</div>;
+  }
+
+  // Handle case where trip is not found
+  if (!currentTrip && !tripLoading) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-600 mb-4">Trip not found</p>
+        <button
+          onClick={() => navigate('/trips')}
+          className="text-emerald-600 hover:text-emerald-700"
+        >
+          Back to Trips
+        </button>
+      </div>
+    );
+  }
+
   const handleAddExpense = async (e) => {
     e.preventDefault();
     
@@ -104,24 +124,6 @@ const TripDetail = () => {
     id,
     ...data
   }));
-
-  if (tripLoading) {
-    return <div className="text-center py-8">Loading trip...</div>;
-  }
-
-  if (!currentTrip) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-gray-600 mb-4">Trip not found</p>
-        <button
-          onClick={() => navigate('/trips')}
-          className="text-emerald-600 hover:text-emerald-700"
-        >
-          Back to Trips
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto px-4 py-8">
