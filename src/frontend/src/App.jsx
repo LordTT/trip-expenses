@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import TripList from './components/TripList';
-import TripDetail from './components/TripDetail';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
+import Navbar from './components/Navbar.jsx';
+import TripList from './components/TripList.jsx';
+import TripDetail from './components/TripDetail.jsx';
+import LoginForm from './components/LoginForm.jsx';
+import RegisterForm from './components/RegisterForm.jsx';
 import useAuthStore from './store/authStore';
 
 function PrivateRoute({ children }) {
