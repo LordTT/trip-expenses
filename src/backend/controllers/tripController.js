@@ -88,6 +88,26 @@ const addTripMember = async (req, res) => {
   }
 };
 
+const findUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const deleteTrip = async (req, res) => {
   try {
     const { tripId } = req.params;
@@ -118,5 +138,6 @@ module.exports = {
   getTrips,
   getTripById,
   addTripMember,
+  findUserByEmail,
   deleteTrip,
 };

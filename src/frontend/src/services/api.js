@@ -28,6 +28,7 @@ export const userAPI = {
   register: (userData) => api.post('/users/register', userData),
   login: (userData) => api.post('/users/login', userData),
   getProfile: () => api.get('/users/profile'),
+  findByEmail: (email) => api.get(`/trips/find-user-by-email?email=${encodeURIComponent(email)}`),
 };
 
 // Trip endpoints

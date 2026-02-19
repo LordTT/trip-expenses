@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/Navbar.jsx';
 import TripList from './components/TripList.jsx';
 import TripDetail from './components/TripDetail.jsx';
+import InviteMembers from './components/InviteMembers.jsx';
 import LoginForm from './components/LoginForm.jsx';
 import RegisterForm from './components/RegisterForm.jsx';
 import useAuthStore from './store/authStore';
@@ -44,6 +45,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <TripDetail />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/trips/:tripId/invite"
+              element={
+                <PrivateRoute>
+                  <InviteMembers />
                 </PrivateRoute>
               }
             />

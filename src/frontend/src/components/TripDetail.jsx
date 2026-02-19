@@ -133,10 +133,20 @@ const TripDetail = () => {
       </button>
 
       <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">{currentTrip.name}</h1>
-        {currentTrip.description && (
-          <p className="text-gray-600 mb-4">{currentTrip.description}</p>
-        )}
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-800 mb-2">{currentTrip.name}</h1>
+            {currentTrip.description && (
+              <p className="text-gray-600 mb-4">{currentTrip.description}</p>
+            )}
+          </div>
+          <button
+            onClick={() => navigate(`/trips/${tripId}/invite`)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+          >
+            Invite Members
+          </button>
+        </div>
         <div className="text-sm text-gray-500">
           {currentTrip.startDate && (
             <span className="mr-4">
@@ -148,6 +158,19 @@ const TripDetail = () => {
               End: {new Date(currentTrip.endDate).toLocaleDateString()}
             </span>
           )}
+        </div>
+        <div className="mt-4">
+          <h3 className="font-medium text-slate-800 mb-2">Members:</h3>
+          <div className="flex flex-wrap gap-2">
+            {currentTrip.members?.map((member) => (
+              <span 
+                key={member._id} 
+                className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm"
+              >
+                {member.username}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
