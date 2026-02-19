@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useTripStore from '../store/tripStore';
 import useExpenseStore from '../store/expenseStore';
+import useAuthStore from '../store/authStore';
 
 const TripDetail = () => {
   const { tripId } = useParams();
   const navigate = useNavigate();
   const { currentTrip, getTripById, isLoading: tripLoading } = useTripStore();
   const { expenses, getExpensesByTrip, addExpense, deleteExpense, isLoading: expenseLoading, error } = useExpenseStore();
+  const { user } = useAuthStore(); // Get user from auth store
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
   const [newExpense, setNewExpense] = useState({
     description: '',
@@ -27,12 +29,17 @@ const TripDetail = () => {
     e.preventDefault();
     
     try {
+      // If no participants selected, default to the current user
+      const participantsToSubmit = newExpense.participants.length > 0 
+        ? newExpense.participants 
+        : [user._id]; // Use current user as default participant
+      
       await addExpense({
         description: newExpense.description,
         amount: parseFloat(newExpense.amount),
         currency: newExpense.currency,
         tripId: tripId,
-        participants: newExpense.participants.length > 0 ? newExpense.participants : [currentTrip.members[0]?._id],
+        participants: participantsToSubmit,
       });
       setNewExpense({ description: '', amount: '', currency: 'USD', participants: [] });
       setShowAddExpenseModal(false);
@@ -318,6 +325,44 @@ const TripDetail = () => {
                   <option value="CAD">CAD (C$)</option>
                   <option value="AUD">AUD (A$)</option>
                 </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Participants
+                </label>
+                <div className="space-y-2 max-h-40 overflow-y-auto p-2 border border-gray-300 rounded-lg">
+                  {currentTrip?.members?.map((member) => (
+                    <div key={member._id} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`member-${member._id}`}
+                        checked={newExpense.participants.includes(member._id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setNewExpense({
+                              ...newExpense,
+                              participants: [...newExpense.participants, member._id],
+                            });
+                          } else {
+                            setNewExpense({
+                              ...newExpense,
+                              participants: newExpense.participants.filter(
+                                (id) => id !== member._id
+                              ),
+                            });
+                          }
+                        }}
+                        className="mr-2"
+                      />
+                      <label htmlFor={`member-${member._id}`} className="text-sm">
+                        {member.username}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Select participants (defaults to self if none selected)
+                </p>
               </div>
               <div className="flex justify-end space-x-2">
                 <button
