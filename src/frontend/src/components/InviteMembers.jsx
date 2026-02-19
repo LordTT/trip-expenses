@@ -7,7 +7,7 @@ import { userAPI } from '../services/api';
 const InviteMembers = () => {
   const { tripId } = useParams();
   const navigate = useNavigate();
-  const { currentTrip, getTripById, addMember } = useTripStore();
+  const { currentTrip, getTripById, addTripMember } = useTripStore();
   const { user } = useAuthStore();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,15 +31,19 @@ const InviteMembers = () => {
       }
 
       // Find user by email
+      console.log('Finding user by email:', email);
       const userData = await userAPI.findByEmail(email);
+      console.log('User data received:', userData);
       
       // Add member to trip
+      console.log('Adding member to trip:', tripId, 'with user ID:', userData.data._id);
       await addTripMember(tripId, userData.data._id);
       
       // Reset form
       setEmail('');
       setError('');
     } catch (err) {
+      console.error('Invite error:', err); // Log the full error for debugging
       setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
