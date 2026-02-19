@@ -31,12 +31,9 @@ const InviteMembers = () => {
       }
 
       // Find user by email
-      console.log('Finding user by email:', email);
       const userData = await userAPI.findByEmail(email);
-      console.log('User data received:', userData);
       
       // Add member to trip
-      console.log('Adding member to trip:', tripId, 'with user ID:', userData.data._id);
       await addTripMember(tripId, userData.data._id);
       
       // Reset form
