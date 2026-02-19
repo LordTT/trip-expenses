@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import useTripStore from '../store/tripStore';
 import { tripAPI } from '../services/api';
 
@@ -6,6 +7,11 @@ const TripList = () => {
   const { trips, getTrips, deleteTrip, isLoading, error, clearError } = useTripStore();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newTrip, setNewTrip] = useState({ name: '', description: '' });
+
+  useEffect(() => {
+    // Load trips when component mounts
+    getTrips();
+  }, [getTrips]);
 
   const handleCreateTrip = async (e) => {
     e.preventDefault();
@@ -64,9 +70,10 @@ const TripList = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {trips.map((trip) => (
-            <div
+            <Link
+              to={`/trips/${trip._id}`}
               key={trip._id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition block"
             >
               <div className="p-6">
                 <h3 className="text-xl font-bold text-slate-800 mb-2">
@@ -86,14 +93,17 @@ const TripList = () => {
                       : 'No start date'}
                   </span>
                   <button
-                    onClick={() => handleDeleteTrip(trip._id)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering link click
+                      handleDeleteTrip(trip._id)
+                    }}
                     className="text-red-600 hover:text-red-800 text-sm"
                   >
                     Delete
                   </button>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
